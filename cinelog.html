@@ -157,6 +157,32 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .suggested span:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-g)}
 .modal-foot{display:flex;gap:10px;padding:20px 28px 28px;justify-content:flex-end}
 
+/* ═══ DISCOVER EXPLORE PANEL ═══ */
+.explore-panel{position:relative;width:92%;max-width:900px;background:var(--bg2);border:1px solid var(--brd);
+  border-radius:20px;overflow:visible;animation:slideIn .35s cubic-bezier(.22,1,.36,1)}
+.explore-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 5%,var(--blue) 30%,var(--violet) 70%,transparent 95%);opacity:.6;z-index:1}
+.explore-inner{display:flex;gap:0}
+.explore-left{flex:1;min-width:0;padding:28px}
+.explore-right{width:220px;flex-shrink:0;border-left:1px solid var(--brd);background:var(--bg);overflow-y:auto;padding:14px;
+  border-radius:0 20px 20px 0}
+.explore-close{position:absolute;top:16px;right:16px;background:var(--bg3);border:1px solid var(--brd);color:var(--tx2);
+  width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:.2s;z-index:2}
+.explore-close:hover{background:var(--bg4);color:var(--tx)}
+.sim-card{display:flex;gap:10px;padding:10px;border-radius:10px;border:1px solid var(--brd);background:var(--bg2);cursor:pointer;transition:all .3s;margin-bottom:6px}
+.sim-card:hover{border-color:var(--tx3);transform:translateX(3px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.sim-poster{width:44px;height:66px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--bg4)}
+.sim-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.sim-title{font-family:'Bodoni Moda',serif;font-size:11px;font-weight:600;line-height:1.2;margin-bottom:2px}
+.sim-meta{font-size:9px;color:var(--tx3);margin-bottom:3px}
+.sim-actions{display:flex;gap:4px}
+.sim-btn{font-size:8px;padding:3px 8px;border-radius:5px;border:none;cursor:pointer;font-weight:600;transition:.2s;letter-spacing:.3px}
+.sim-btn:hover{transform:scale(1.05)}
+.sim-spinner{text-align:center;padding:40px;color:var(--tx3);font-size:11px}
+@media(max-width:900px){.explore-inner{flex-direction:column}.explore-left{max-height:none}.explore-right{width:100%!important;max-height:250px!important;border-left:none;border-top:1px solid var(--brd);border-radius:0 0 20px 20px}}
+@media(max-width:600px){.explore-panel{width:96%;border-radius:16px}}
+
 /* ═══ CHECKBOX ═══ */
 .check-row{display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:6px;padding:10px 14px;border-radius:10px;transition:.2s}
 .check-row:hover{background:var(--bg3)}
@@ -826,6 +852,7 @@ function openDetail(entry){
     </div>
     <div class="modal-foot">
       <button class="btn-outline btn-danger" id="dR">Remove</button>
+      <button class="btn-outline" id="dSim" style="margin-right:auto">\uD83D\uDD0D Similar</button>
       <button class="btn-outline" id="dCa">Cancel</button>
       <button class="btn btn-sm" id="dS">Save Changes</button>
     </div></div>`;
@@ -853,6 +880,18 @@ function openDetail(entry){
   $('#recToggle',o).onclick=()=>{rec=!rec;$('#recB2',o).classList.toggle('on',rec);$('#recB2',o).textContent=rec?'\u2713':''};
   $('#rewToggle',o).onclick=()=>{rew=!rew;$('#rewB',o).classList.toggle('on',rew);$('#rewB',o).textContent=rew?'\u2713':''};
   $('#dCa',o).onclick=()=>o.remove();
+  const simBtn=o.querySelector('#dSim');
+  if(simBtn){simBtn.addEventListener('click',function(ev){
+    ev.stopPropagation();
+    if(!entry.tmdb_id){toast('No TMDB ID — cannot find similar titles');return}
+    o.remove();
+    openExplorePanel({
+      id:entry.tmdb_id,title:entry.title,year:entry.year,
+      poster:entry.poster,overview:entry.overview||'',
+      vote:entry.tmdbRating||0,genres:entry.genres||[],
+      media_type:entry.media_type
+    },entry.media_type,null,true);
+  });}
   $('#dR',o).onclick=()=>{if(confirm('Remove "'+entry.title+'"?')){S.entries=S.entries.filter(e=>e.id!==entry.id);ps();o.remove();render()}};
   $('#dS',o).onclick=()=>{
     entry.myRating=parseFloat(sl.value);
@@ -1030,6 +1069,182 @@ function renderLibrary(el){
 }
 
 // ═══ VRSCOVER (Discover) ═══
+// ═══ EXPLORE PANEL (Discover detail + similar) ═══
+function openExplorePanel(item,mediaType,removeCardFn,fromLibrary){
+  const accent=mediaType==='movie'?'blue':'violet';
+  const o=document.createElement('div');o.className='overlay';
+  const genreText=(item.genres||[]).map(function(g){return typeof g==='number'?GENRES[g]:g}).filter(Boolean);
+  var libEntry=fromLibrary?S.entries.find(function(e){return String(e.tmdb_id)===String(item.id)}):null;
+  var ratingHtml=libEntry?'<div style="margin-bottom:16px"><span style="font-family:\'JetBrains Mono\',monospace;font-size:20px;font-weight:700;background:linear-gradient(90deg,var(--blue-l),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent">'+libEntry.myRating+'/10</span><span style="color:var(--tx3);font-size:11px;margin-left:8px">Your rating</span></div>':'';
+  var actionHtml=fromLibrary?ratingHtml
+    :'<div style="display:flex;gap:10px;margin-bottom:16px">'
+    +'<button class="btn exp-add" style="background:var(--'+accent+');flex:1;max-width:220px">\uff0b Add to Library</button>'
+    +'<button class="btn exp-watch" style="background:var(--grn);flex:1;max-width:220px">\uff0b Add to Watchlist</button>'
+    +'</div>';
+  o.innerHTML='<div class="explore-panel">'
+    +'<button class="explore-close">\u00d7</button>'
+    +'<div class="explore-inner">'
+    +'<div class="explore-left">'
+    +'<div style="display:flex;gap:24px;margin-bottom:24px">'
+    +(item.poster?'<img src="'+TMDB_IMG+'w300'+item.poster+'" style="width:160px;height:240px;border-radius:14px;object-fit:cover;box-shadow:0 12px 40px rgba(0,0,0,.6);flex-shrink:0" />':'<div style="width:160px;height:240px;border-radius:14px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0">\uD83C\uDFAC</div>')
+    +'<div style="flex:1;min-width:0">'
+    +'<h2 class="grad-title" style="font-size:28px;margin-bottom:6px">'+esc(item.title)+'</h2>'
+    +'<div style="color:var(--'+accent+');font-weight:500;font-size:13px;margin-bottom:10px;font-family:\'JetBrains Mono\',monospace">'+(item.year||'')+' \u00b7 \u2605 '+(item.vote||item.tmdbRating||0).toFixed(1)+'</div>'
+    +'<div class="genre-pills" style="margin-bottom:12px">'+genreText.map(function(g){return'<span class="pill">'+esc(g)+'</span>'}).join('')+'</div>'
+    +(item.overview?'<p style="font-size:12px;color:var(--tx2);line-height:1.7">'+esc(item.overview)+'</p>':'')
+    +'</div></div>'
+    +actionHtml
+    +'</div>'
+    +'<div class="explore-right">'
+    +'<h3 class="grad-title" style="font-size:14px;margin-bottom:12px">Similar Titles</h3>'
+    +'<div id="simList"><div class="sim-spinner"><div class="vr-spinner"></div>Loading similar...</div></div>'
+    +'</div></div></div>';
+  document.body.appendChild(o);
+  // Match right panel height to left panel
+  var leftEl=o.querySelector('.explore-left');
+  var rightEl=o.querySelector('.explore-right');
+  if(leftEl&&rightEl){
+    requestAnimationFrame(function(){
+      var h=leftEl.offsetHeight;
+      rightEl.style.maxHeight=h+'px';
+    });
+  }
+  o.onclick=function(ev){if(ev.target===o)o.remove()};
+  o.querySelector('.explore-close').onclick=function(){o.remove()};
+
+  // Add to library (only exists when not from library)
+  var expAddBtn=o.querySelector('.exp-add');
+  if(expAddBtn)expAddBtn.onclick=async function(){
+    var btn=this;btn.disabled=true;btn.textContent='Loading...';
+    try{
+      var resp=await fetch('https://api.themoviedb.org/3/'+mediaType+'/'+item.id+'?api_key='+S.apiKey+'&append_to_response=external_ids');
+      var d=await resp.json();o.remove();
+      if(removeCardFn)removeCardFn(item.id);
+      openAddModal(Object.assign({},d,{media_type:mediaType}));
+    }catch(e){btn.textContent='Error';btn.disabled=false}
+  };
+
+  // Add to watchlist (only exists when not from library)
+  var expWatchBtn=o.querySelector('.exp-watch');
+  if(expWatchBtn)expWatchBtn.onclick=async function(){
+    var btn=this;
+    if(S.bucket.find(function(e){return String(e.tmdb_id)===String(item.id)})){toast('Already in Watchlist');return}
+    if(S.entries.find(function(e){return String(e.tmdb_id)===String(item.id)})){toast('Already in library');return}
+    btn.disabled=true;btn.textContent='Adding...';
+    try{
+      var resp=await fetch('https://api.themoviedb.org/3/'+mediaType+'/'+item.id+'?api_key='+S.apiKey+'&append_to_response=external_ids');
+      var d=await resp.json();
+      var t=d.title||d.name,y=(d.release_date||d.first_air_date||'').slice(0,4);
+      S.bucket.push({
+        id:'bucket_'+d.id+'_'+Date.now(),tmdb_id:d.id,media_type:mediaType,
+        title:t,year:y,genres:(d.genres||[]).map(function(g){return g.name}),poster:d.poster_path||'',
+        overview:d.overview||'',tmdbRating:d.vote_average||0,
+        runtime:d.runtime||(d.episode_run_time&&d.episode_run_time[0])||0,
+        seasons:d.number_of_seasons||0,episodes:d.number_of_episodes||0,
+        imdbId:d.external_ids?d.external_ids.imdb_id||'':'',addedAt:new Date().toISOString()
+      });ps();
+      if(removeCardFn)removeCardFn(item.id);
+      btn.textContent='\u2713 Added';toast('Added "'+t+'" to Watchlist');
+    }catch(e){btn.textContent='Error';btn.disabled=false}
+  };
+
+  // Fetch similar titles
+  (async function(){
+    var simEl=o.querySelector('#simList');
+    try{
+      var simUrl='https://api.themoviedb.org/3/'+mediaType+'/'+item.id+'/similar?api_key='+S.apiKey+'&page=1';
+      var resp=await fetch(simUrl);
+      if(!resp.ok)throw new Error('HTTP '+resp.status);
+      var data=await resp.json();
+      if(!simEl||!o.parentNode)return;
+      var results=(data.results||[]).filter(function(r){
+        return !S.entries.some(function(e){return String(e.tmdb_id)===String(r.id)})
+      }).slice(0,12);
+      // If /similar returns nothing, try /recommendations
+      if(!results.length){
+        var recUrl='https://api.themoviedb.org/3/'+mediaType+'/'+item.id+'/recommendations?api_key='+S.apiKey+'&page=1';
+        var resp2=await fetch(recUrl);
+        if(resp2.ok){
+          var data2=await resp2.json();
+          results=(data2.results||[]).filter(function(r){
+            return !S.entries.some(function(e){return String(e.tmdb_id)===String(r.id)})
+          }).slice(0,12);
+        }
+      }
+      if(!simEl||!o.parentNode)return;
+      if(!results.length){simEl.innerHTML='<div style="text-align:center;padding:30px;color:var(--tx3);font-size:11px">No similar titles found.</div>';return}
+      simEl.innerHTML=results.map(function(r){
+        var t=r.title||r.name||'';
+        var y=(r.release_date||r.first_air_date||'').slice(0,4);
+        var p=r.poster_path?TMDB_IMG+'w92'+r.poster_path:'';
+        var inLib=S.entries.some(function(e){return String(e.tmdb_id)===String(r.id)});
+        var inBucket=S.bucket.some(function(e){return String(e.tmdb_id)===String(r.id)});
+        var html='<div class="sim-card" data-sid="'+r.id+'">';
+        html+=p?'<img class="sim-poster" src="'+p+'" alt="'+esc(t)+'" loading="lazy" />':'<div class="sim-poster" style="display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:16px">\uD83C\uDFAC</div>';
+        html+='<div class="sim-info"><div class="sim-title">'+esc(t)+'</div>';
+        html+='<div class="sim-meta">'+y+(r.vote_average>0?' \u00b7 \u2605 '+r.vote_average.toFixed(1):'')+'</div>';
+        if(inLib){html+='<div style="font-size:9px;color:var(--'+accent+');font-weight:600">\u2713 In Library</div>'}
+        else if(inBucket){html+='<div style="font-size:9px;color:var(--tx3);font-weight:600">\u2713 In Watchlist</div>'}
+        else{html+='<div class="sim-actions">'
+          +'<button class="sim-btn sim-add-lib" data-sid="'+r.id+'" style="background:var(--'+accent+');color:#fff">\uff0b Library</button>'
+          +'<button class="sim-btn sim-add-wl" data-sid="'+r.id+'" style="background:var(--grn);color:#fff">\uff0b Watchlist</button>'
+          +'</div>'}
+        html+='</div></div>';
+        return html;
+      }).join('');
+
+      // Click a similar card to open its own explore panel
+      simEl.querySelectorAll('.sim-card').forEach(function(sc){sc.onclick=function(ev){
+        if(ev.target.closest('.sim-btn'))return;
+        var sid=parseInt(sc.dataset.sid);
+        var sr=results.find(function(x){return x.id===sid});if(!sr)return;
+        o.remove();
+        openExplorePanel({
+          id:sr.id,title:sr.title||sr.name||'',year:(sr.release_date||sr.first_air_date||'').slice(0,4),
+          poster:sr.poster_path,overview:sr.overview||'',vote:sr.vote_average||0,
+          genres:sr.genre_ids||[],media_type:mediaType
+        },mediaType,removeCardFn);
+      }});
+
+      // Add to library from similar
+      simEl.querySelectorAll('.sim-add-lib').forEach(function(btn){btn.onclick=async function(ev){
+        ev.stopPropagation();var sid=btn.dataset.sid;btn.disabled=true;btn.textContent='...';
+        try{
+          var r2=await fetch('https://api.themoviedb.org/3/'+mediaType+'/'+sid+'?api_key='+S.apiKey+'&append_to_response=external_ids');
+          var d=await r2.json();
+          openAddModal(Object.assign({},d,{media_type:mediaType}));
+          o.remove();
+        }catch(e){btn.textContent='Err';btn.disabled=false}
+      }});
+
+      // Add to watchlist from similar
+      simEl.querySelectorAll('.sim-add-wl').forEach(function(btn){btn.onclick=async function(ev){
+        ev.stopPropagation();var sid=parseInt(btn.dataset.sid);
+        if(S.bucket.some(function(e){return String(e.tmdb_id)===String(sid)})){toast('Already in Watchlist');return}
+        btn.disabled=true;btn.textContent='...';
+        try{
+          var r2=await fetch('https://api.themoviedb.org/3/'+mediaType+'/'+sid+'?api_key='+S.apiKey+'&append_to_response=external_ids');
+          var d=await r2.json();
+          var t=d.title||d.name,y=(d.release_date||d.first_air_date||'').slice(0,4);
+          S.bucket.push({
+            id:'bucket_'+d.id+'_'+Date.now(),tmdb_id:d.id,media_type:mediaType,
+            title:t,year:y,genres:(d.genres||[]).map(function(g){return g.name}),poster:d.poster_path||'',
+            overview:d.overview||'',tmdbRating:d.vote_average||0,
+            runtime:d.runtime||(d.episode_run_time&&d.episode_run_time[0])||0,
+            seasons:d.number_of_seasons||0,episodes:d.number_of_episodes||0,
+            imdbId:d.external_ids?d.external_ids.imdb_id||'':'',addedAt:new Date().toISOString()
+          });ps();
+          btn.textContent='\u2713';btn.style.opacity='.5';
+          toast('Added "'+t+'" to Watchlist');
+        }catch(e){btn.textContent='Err';btn.disabled=false}
+      }});
+    }catch(err){
+      console.error('Similar fetch error:',err);
+      if(simEl&&o.parentNode)simEl.innerHTML='<div style="text-align:center;padding:30px;color:var(--tx3);font-size:11px">Failed to load similar titles.</div>';
+    }
+  })();
+}
+
 function renderVRadar(el){
   if(!S.entries.length){el.innerHTML=`<div class="empty fade-up"><div class="icon">🔮</div><h3>Build Your Library First</h3>
     <p>Add some movies and shows so Discover can learn your taste.</p>
@@ -1348,6 +1563,14 @@ function renderVRadar(el){
         toast(`Added "${t}" to Watchlist`);
       }catch(e){btn.textContent='Error';btn.disabled=false}
     });
+
+    // Click card to open explore panel with similar movies
+    $$('.vr-card').forEach(card=>{card.onclick=function(ev){
+      if(ev.target.closest('.vr-add-btn'))return;
+      const tmdbId=card.dataset.tmdb;
+      const r=vrResults.find(x=>String(x.id)===String(tmdbId));if(!r)return;
+      openExplorePanel(r,vrTab==='movies'?'movie':'tv',removeCard);
+    }});
   }
 
   buildUI();
