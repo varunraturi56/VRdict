@@ -261,7 +261,6 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .bucket-card{position:relative;border-radius:14px;overflow:hidden;background:var(--bg3);
   transition:all .4s cubic-bezier(.22,1,.36,1);display:flex;gap:16px;padding:16px;border:1px solid var(--brd)}
 .bucket-card:hover{border-color:var(--tx3);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.4);overflow:visible;z-index:10}
-.bucket-card:hover .card-preview{display:block}
 .bucket-grid{overflow:visible;padding-top:220px;margin-top:-220px}
 .bucket-poster{width:70px;height:105px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--bg4)}
 .bucket-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
@@ -290,7 +289,6 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .vr-card{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;
   transition:all .4s cubic-bezier(.22,1,.36,1);aspect-ratio:2/3;background:var(--bg3)}
 .vr-card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 20px 60px rgba(0,0,0,.7);overflow:visible;z-index:10}
-.vr-card:hover .card-preview{display:block}
 .vr-grid{overflow:visible;padding-top:200px;margin-top:-200px}
 .vr-card img{width:100%;height:100%;object-fit:cover;transition:.5s cubic-bezier(.22,1,.36,1)}
 .vr-card:hover img{filter:brightness(.2) saturate(.8);transform:scale(1.05)}
@@ -337,14 +335,14 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .no-poster{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg3);color:var(--tx3);font-size:36px}
 
 /* ═══ HOVER PREVIEW ═══ */
-.card-preview{display:none;position:absolute;left:50%;top:0;transform:translateX(-50%) translateY(-100%) translateY(-12px);
-  width:300px;background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:18px;z-index:60;
+.card-preview{display:none;position:fixed;width:300px;background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:18px;z-index:9999;
   box-shadow:0 20px 60px rgba(0,0,0,.8),0 0 0 1px rgba(14,165,233,.1);pointer-events:none;
   animation:previewIn .25s cubic-bezier(.22,1,.36,1) both}
-.poster-card:hover .card-preview{display:block}
-.card-preview::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%) rotate(45deg);
-  width:12px;height:12px;background:var(--bg2);border-right:1px solid var(--brd);border-bottom:1px solid var(--brd)}
-@keyframes previewIn{from{opacity:0;transform:translateX(-50%) translateY(-100%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(-100%) translateY(-12px)}}
+.card-preview .cp-arrow{position:absolute;left:50%;transform:translateX(-50%) rotate(45deg);
+  width:12px;height:12px;background:var(--bg2);border:1px solid var(--brd)}
+.card-preview .cp-arrow.arrow-down{bottom:-6px;border-top:none;border-left:none}
+.card-preview .cp-arrow.arrow-up{top:-6px;border-bottom:none;border-right:none}
+@keyframes previewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .card-preview .cp-title{font-family:'Bodoni Moda',serif;font-size:16px;font-weight:600;margin-bottom:6px;line-height:1.3}
 .card-preview .cp-meta{font-size:11px;color:var(--tx2);margin-bottom:8px;display:flex;gap:8px;align-items:center}
 .card-preview .cp-rating{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;
@@ -476,7 +474,6 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .picks-row{display:flex;gap:16px;flex-wrap:wrap;padding-bottom:12px}
 .pick-card{width:155px;position:relative;cursor:pointer;transition:.35s cubic-bezier(.22,1,.36,1)}
 .pick-card:hover{transform:translateY(-6px);z-index:10}
-.pick-card:hover .card-preview{display:block}
 .picks-row{overflow:visible;padding-top:200px;margin-top:-200px}
 .pick-card img{width:155px;height:232px;border-radius:12px;object-fit:cover;box-shadow:0 8px 28px rgba(0,0,0,.5)}
 .pick-card .pick-info{margin-top:10px}
@@ -534,7 +531,8 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 /* ═══ GRADIENT SCROLL BOX ═══ */
 .scroll-box-wrap{height:70vh;border-radius:16px;padding:1.5px;overflow:hidden;
   background:linear-gradient(135deg,var(--blue),var(--violet))}
-.scroll-box{height:100%;overflow-y:scroll;border-radius:14.5px;padding:20px;background:var(--bg2)}
+.scroll-box{height:100%;overflow-y:hidden;border-radius:14.5px;padding:20px;background:var(--bg2)}
+.scroll-box.scroll-active{overflow-y:scroll}
 .scroll-box::-webkit-scrollbar{width:4px}
 .scroll-box::-webkit-scrollbar-track{background:transparent}
 .scroll-box::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--blue),var(--violet));border-radius:2px}
@@ -1091,7 +1089,6 @@ function renderLibrary(el){
     const grid=$(gridId);grid.innerHTML=L.map((e,i)=>`
       <div class="poster-card fade-up" style="animation-delay:${Math.min(i*.04,.5)}s" data-idx="${e.id}">
         ${e.poster?`<img src="${TMDB_IMG}w342${e.poster}" alt="${esc(e.title)}" loading="lazy" />`:`<div class="no-poster">\uD83C\uDFAC</div>`}
-        <span class="badge">${e.myRating}</span>
         ${e.recommended?'<span class="rec-star">\u2B50</span>':''}
         <div class="poster-over"><h4>${esc(e.title)}</h4>
           <div class="ratings"><span class="mine">${e.myRating}/10</span>${e.tmdbRating>0?`<span class="theirs">TMDB ${e.tmdbRating.toFixed(1)}</span>`:''}</div>
@@ -1995,7 +1992,6 @@ function renderVRcommend(el){
         <div class="vr-card fade-up" style="animation-delay:${Math.min(i*.04,.6)}s" data-idx="${e.id}">
           ${e.poster?`<img src="${TMDB_IMG}w342${e.poster}" alt="${esc(e.title)}" loading="lazy" />`
             :`<div class="vr-no-poster">🎬</div>`}
-          <div class="vr-score" style="background:var(--${accent})">${e.myRating}</div>
           <div class="vr-over">
             <h4>${esc(e.title)}</h4>
             <div style="font-size:10px;color:var(--tx3);margin:4px 0">${e.year||''} · ${(e.genres||[]).slice(0,2).join(', ')}</div>
@@ -2135,7 +2131,6 @@ function pickCard(e,i){
   return`<div class="pick-card" data-idx="${e.id}">
     ${e.poster?`<img src="${TMDB_IMG}w300${e.poster}" alt="${esc(e.title)}" loading="lazy" />`
     :`<div style="width:155px;height:232px;border-radius:12px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px">\uD83C\uDFAC</div>`}
-    <span class="pick-rank">${i+1}</span>
     ${isGem?'<span class="gem-badge">\uD83D\uDC8E</span>':''}
     <div class="pick-info"><div class="pick-title">${esc(e.title)}</div>
       <div class="pick-rating">${e.myRating}/10 ${e.year?`<span style="color:var(--tx3);font-weight:400">\u00b7 ${e.year}</span>`:''}</div></div>
@@ -2277,6 +2272,76 @@ function renderStats(el){
 }
 
 render();checkBackupReminder();
+
+// ═══ GLOBAL HOVER TOOLTIP ═══
+(function(){
+  var tip=null,activeCard=null;
+  function show(card){
+    var src=card.querySelector('.card-preview');
+    if(!src)return;
+    hide();
+    activeCard=card;
+    tip=src.cloneNode(true);
+    tip.style.display='block';
+    document.body.appendChild(tip);
+    var r=card.getBoundingClientRect();
+    var h=tip.offsetHeight;
+    var left=r.left+r.width/2-150;
+    var top=r.top-h-6;
+    var below=false;
+    if(top<4){top=r.bottom+6;below=true}
+    if(left<4)left=4;
+    if(left+300>window.innerWidth-4)left=window.innerWidth-304;
+    tip.style.left=left+'px';tip.style.top=top+'px';
+    var arrow=document.createElement('div');
+    arrow.className='cp-arrow '+(below?'arrow-up':'arrow-down');
+    // Position arrow to point at card center
+    var arrowLeft=r.left+r.width/2-left-6;
+    if(arrowLeft<12)arrowLeft=12;if(arrowLeft>288)arrowLeft=288;
+    arrow.style.left=arrowLeft+'px';arrow.style.transform='translateX(0) rotate(45deg)';
+    tip.appendChild(arrow);
+  }
+  function hide(){
+    if(tip&&tip.parentNode)tip.parentNode.removeChild(tip);
+    tip=null;activeCard=null;
+  }
+  document.addEventListener('mouseover',function(e){
+    var card=e.target.closest('.poster-card,.vr-card,.bucket-card,.pick-card');
+    if(card&&card!==activeCard)show(card);
+    else if(!card)hide();
+  });
+  document.addEventListener('mouseout',function(e){
+    if(!e.relatedTarget||!e.relatedTarget.closest('.poster-card,.vr-card,.bucket-card,.pick-card'))hide();
+  });
+  document.addEventListener('scroll',hide,true);
+})();
+
+// ═══ SCROLL BOX ACTIVATION ═══
+// Only enable inner scrolling once the box bottom is fully visible
+(function(){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      var box=en.target.querySelector('.scroll-box');
+      if(!box)return;
+      if(en.intersectionRatio>=0.95)box.classList.add('scroll-active');
+      else box.classList.remove('scroll-active');
+    });
+  },{threshold:[0,0.95,1]});
+  // Observe whenever DOM updates
+  var watching=new Set();
+  function scan(){
+    document.querySelectorAll('.scroll-box-wrap').forEach(function(w){
+      if(!watching.has(w)){watching.add(w);obs.observe(w)}
+    });
+    // Clean up removed elements
+    watching.forEach(function(w){
+      if(!document.contains(w)){obs.unobserve(w);watching.delete(w)}
+    });
+  }
+  var mo=new MutationObserver(scan);
+  mo.observe(document.body,{childList:true,subtree:true});
+  scan();
+})();
 </script>
 </body>
 </html>
