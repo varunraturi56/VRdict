@@ -9,15 +9,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
+:root,[data-theme="dark"]{
   --bg:#08080a;--bg2:#0e0e12;--bg3:#151519;--bg4:#1c1c22;--bg5:#24242c;
   --blue:#0ea5e9;--blue-l:#38bdf8;--blue-d:#0284c7;--blue-g:rgba(14,165,233,.1);--blue-glow:rgba(14,165,233,.15);
   --violet:#a78bfa;--violet-l:#c4b5fd;--violet-d:#8b5cf6;--violet-g:rgba(167,139,250,.1);--violet-glow:rgba(167,139,250,.15);
   --tx:#e8e4dc;--tx2:#9a968e;--tx3:#5c5954;--brd:#1e1e26;--red:#ef4444;--grn:#22c55e;
+  --overlay:rgba(0,0,0,.88);--header-bg:rgba(8,8,10,.8);--card-shadow:rgba(0,0,0,.5);--noise-opacity:.6;
+}
+[data-theme="light"]{
+  --bg:#f5f3f0;--bg2:#ffffff;--bg3:#ece9e4;--bg4:#e0ddd7;--bg5:#d4d0ca;
+  --blue:#0284c7;--blue-l:#0ea5e9;--blue-d:#0369a1;--blue-g:rgba(14,165,233,.08);--blue-glow:rgba(14,165,233,.12);
+  --violet:#8b5cf6;--violet-l:#a78bfa;--violet-d:#7c3aed;--violet-g:rgba(167,139,250,.08);--violet-glow:rgba(167,139,250,.12);
+  --tx:#1a1a1e;--tx2:#6b6660;--tx3:#9c9890;--brd:rgba(0,0,0,.08);--red:#dc2626;--grn:#16a34a;
+  --overlay:rgba(0,0,0,.5);--header-bg:rgba(245,243,240,.85);--card-shadow:rgba(0,0,0,.1);--noise-opacity:0;
 }
 body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;position:relative}
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:.6}
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:var(--noise-opacity)}
 body::after{content:'';position:fixed;top:-40%;left:-20%;width:80%;height:80%;
   background:radial-gradient(ellipse,rgba(14,165,233,.04) 0%,transparent 70%);z-index:0;pointer-events:none}
 #app{position:relative;z-index:1}
@@ -36,7 +44,7 @@ a{color:var(--blue);text-decoration:none;transition:color .2s}a:hover{color:var(
 /* ═══ HEADER ═══ */
 .header{padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;
   border-bottom:none;position:sticky;top:0;z-index:100;
-  background:rgba(8,8,10,.8);backdrop-filter:blur(20px) saturate(1.5)}
+  background:var(--header-bg);backdrop-filter:blur(20px) saturate(1.5)}
 .header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,var(--blue-l),var(--violet));opacity:.5}
 .logo{font-family:'Bodoni Moda',serif;font-size:26px;font-weight:700;letter-spacing:-.5px;
@@ -121,7 +129,7 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .toggle button:hover:not(.active){color:var(--tx);background:var(--bg4)}
 
 /* ═══ MODAL ═══ */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;
+.overlay{position:fixed;inset:0;background:var(--overlay);display:flex;align-items:center;
   justify-content:center;z-index:200;backdrop-filter:blur(8px);animation:fadeIn .15s ease}
 .modal{background:var(--bg2);border:1px solid var(--brd);border-radius:20px;
   width:92%;max-width:660px;max-height:90vh;overflow-y:auto;animation:slideIn .35s cubic-bezier(.22,1,.36,1);position:relative}
@@ -507,6 +515,9 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .pill .pill-icon{font-size:13px}
 
 /* ═══ DATA MENU ═══ */
+.theme-btn{background:none;border:1px solid var(--brd);border-radius:10px;padding:6px 10px;cursor:pointer;
+  color:var(--tx3);font-size:16px;transition:all .3s;line-height:1}
+.theme-btn:hover{color:var(--tx);border-color:var(--tx3);background:var(--bg3)}
 .data-btn{background:none;border:1px solid var(--brd);border-radius:10px;padding:6px 10px;cursor:pointer;
   color:var(--tx2);font-size:14px;transition:all .2s;position:relative;flex-shrink:0}
 .data-btn:hover{color:var(--tx);border-color:var(--tx3);background:var(--bg3)}
@@ -519,6 +530,34 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
   transition:background .15s}
 .data-menu button:hover{background:var(--bg4)}
 .data-menu button span{font-size:16px}
+
+/* ═══ GRADIENT SCROLL BOX ═══ */
+.scroll-box-wrap{height:70vh;border-radius:16px;padding:1.5px;overflow:hidden;
+  background:linear-gradient(135deg,var(--blue),var(--violet))}
+.scroll-box{height:100%;overflow-y:scroll;border-radius:14.5px;padding:20px;background:var(--bg2)}
+.scroll-box::-webkit-scrollbar{width:4px}
+.scroll-box::-webkit-scrollbar-track{background:transparent}
+.scroll-box::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--blue),var(--violet));border-radius:2px}
+
+/* ═══ LIGHT THEME OVERRIDES ═══ */
+[data-theme="light"] body::after{opacity:0}
+[data-theme="light"] .poster-card{box-shadow:0 2px 12px var(--card-shadow)}
+[data-theme="light"] .poster-card:hover{box-shadow:0 8px 30px var(--card-shadow)!important}
+[data-theme="light"] .bucket-card{box-shadow:0 2px 8px var(--card-shadow)}
+[data-theme="light"] .vr-card{box-shadow:0 2px 12px var(--card-shadow)}
+[data-theme="light"] .modal{box-shadow:0 20px 60px rgba(0,0,0,.15)}
+[data-theme="light"] .explore-panel{box-shadow:0 20px 60px rgba(0,0,0,.15)}
+[data-theme="light"] .card-preview{box-shadow:0 12px 40px rgba(0,0,0,.15),0 0 0 1px var(--brd)}
+[data-theme="light"] .sim-card{box-shadow:0 1px 4px var(--card-shadow)}
+[data-theme="light"] .hero{background:linear-gradient(135deg,var(--bg3) 0%,var(--bg2) 100%)}
+[data-theme="light"] .hero-bg{filter:brightness(.3) saturate(1.2) blur(40px);opacity:.3}
+[data-theme="light"] .hero-poster{box-shadow:0 8px 30px rgba(0,0,0,.15)}
+[data-theme="light"] .hero-shuffle{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.1);color:var(--tx3)}
+[data-theme="light"] .hero-shuffle:hover{background:rgba(0,0,0,.1);color:var(--tx)}
+[data-theme="light"] .chart-box{box-shadow:0 2px 12px var(--card-shadow)}
+[data-theme="light"] ::-webkit-scrollbar-track{background:var(--bg3)}
+[data-theme="light"] ::-webkit-scrollbar-thumb{background:var(--bg5)}
+[data-theme="light"] ::selection{background:var(--blue);color:#fff}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){.stat-grid{grid-template-columns:1fr 1fr}.charts-grid{grid-template-columns:1fr}
@@ -538,6 +577,8 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 <body>
 <div id="app"></div>
 <script>
+// Apply saved theme immediately
+(function(){var t=localStorage.getItem('cinelog_theme')||'dark';document.documentElement.dataset.theme=t})();
 const TMDB_IMG='https://image.tmdb.org/t/p/',TMDB='https://api.themoviedb.org/3';
 const GENRES={28:'Action',12:'Adventure',16:'Animation',35:'Comedy',80:'Crime',99:'Documentary',18:'Drama',10751:'Family',14:'Fantasy',36:'History',27:'Horror',10402:'Music',9648:'Mystery',10749:'Romance',878:'Science Fiction',10770:'TV Movie',53:'Thriller',10752:'War',37:'Western',10759:'Action & Adventure',10762:'Kids',10763:'News',10764:'Reality',10765:'Sci-Fi & Fantasy',10766:'Soap',10767:'Talk',10768:'War & Politics'};
 const DEFAULT_TAGS=['Masterpiece','Hidden Gem','Comfort Watch','Mind-Bending','Date Night','Solo Rewatch','Fell Asleep','Overrated','Underrated','Visually Stunning','Great Soundtrack','Slow Burn','Binge-Worthy','With Spouse','Nostalgic','Must Watch','Guilty Pleasure'];
@@ -622,18 +663,28 @@ function render(){
         <button data-tab="vradar" class="${S.tab==='vradar'?'active':''}">Discover</button>
         <button data-tab="stats" class="${S.tab==='stats'?'active':''}">Stats</button>
       </nav>
+      <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-btn" id="themeBtn" title="Toggle theme">${(localStorage.getItem('cinelog_theme')||'dark')==='light'?'\u2600':'\uD83C\uDF19'}</button>
       <div style="position:relative"><button class="data-btn" id="dataBtn" title="Backup & Restore">&#9881;</button>
         <div class="data-menu" id="dataMenu">
           <button onclick="exportData()"><span>&#128229;</span> Export Backup</button>
           <button onclick="document.getElementById('importFile').click()"><span>&#128228;</span> Import Backup</button>
           <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
         </div>
-      </div>
+      </div></div>
     </header><main class="main" id="main"></main>`;
   $$('.nav button').forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;render()});
   const dbtn=$('#dataBtn'),dmenu=$('#dataMenu');
   if(dbtn)dbtn.onclick=e=>{e.stopPropagation();dmenu.classList.toggle('open')};
   document.addEventListener('click',()=>{if(dmenu)dmenu.classList.remove('open')},{once:true});
+  const tbtn=$('#themeBtn');
+  if(tbtn)tbtn.onclick=()=>{
+    const cur=document.documentElement.dataset.theme||'dark';
+    const next=cur==='dark'?'light':'dark';
+    document.documentElement.dataset.theme=next;
+    localStorage.setItem('cinelog_theme',next);
+    tbtn.textContent=next==='light'?'\u2600':'\uD83C\uDF19';
+  };
   const m=$('#main');
   if(S.tab==='add'){S.tab='vradar'}
   if(S.tab==='vradar')renderVRadar(m);
@@ -968,8 +1019,10 @@ function renderLibrary(el){
         ${pillRow('Sort',[{id:'rating',label:'Rating'},{id:'title',label:'Title'},{id:'year',label:'Year'},{id:'tmdb',label:'TMDB'}],mSort,'ms','blue',true)}
         <div style="margin-left:auto">${viewToggles()}</div>
       </div>
-      <div class="poster-grid ${viewClass()}" id="mGrid"></div>
-      ${!movies.length?'<div style="text-align:center;padding:50px;color:var(--tx3);font-size:12px">No movies yet. Head to <strong>Discover</strong> to search and add some.</div>':''}
+      <div class="scroll-box-wrap"><div class="scroll-box">
+        <div class="poster-grid ${viewClass()}" id="mGrid"></div>
+        ${!movies.length?'<div style="text-align:center;padding:50px;color:var(--tx3);font-size:12px">No movies yet. Head to <strong>Discover</strong> to search and add some.</div>':''}
+      </div></div>
     </div>
 
     <div class="lib-panel tv-section ${activePanel==='tv'?'active':''}" id="tvPanel">
@@ -980,8 +1033,10 @@ function renderLibrary(el){
         ${pillRow('Sort',[{id:'rating',label:'Rating'},{id:'title',label:'Title'},{id:'year',label:'Year'},{id:'tmdb',label:'TMDB'}],tSort,'ts','violet',true)}
         <div style="margin-left:auto">${viewToggles()}</div>
       </div>
-      <div class="poster-grid ${viewClass()}" id="tGrid"></div>
-      ${!tvShows.length?'<div style="text-align:center;padding:50px;color:var(--tx3);font-size:12px">No TV shows yet. Head to <strong>Discover</strong> to search and add some.</div>':''}
+      <div class="scroll-box-wrap"><div class="scroll-box">
+        <div class="poster-grid ${viewClass()}" id="tGrid"></div>
+        ${!tvShows.length?'<div style="text-align:center;padding:50px;color:var(--tx3);font-size:12px">No TV shows yet. Head to <strong>Discover</strong> to search and add some.</div>':''}
+      </div></div>
     </div>`;
 
   // Hero click & shuffle
@@ -1315,7 +1370,12 @@ function renderVRadar(el){
         ${viewToggles()}
       </div>
 
-      <div id="vrResults">${vrLoading?'<div style="text-align:center;padding:60px;color:var(--tx3);font-size:12px"><div class="vr-spinner"></div>Discovering...</div>':''}</div>
+      <div class="scroll-box-wrap">
+        <div class="scroll-box" id="vrBox">
+          <div id="vrResults">${vrLoading?'<div style="text-align:center;padding:60px;color:var(--tx3);font-size:12px"><div class="vr-spinner"></div>Discovering...</div>':''}</div>
+          <div id="vrLoadMore" style="display:none;text-align:center;padding:20px;color:var(--tx3);font-size:11px"><div class="vr-spinner"></div>Loading more...</div>
+        </div>
+      </div>
     </div>`;
 
     $$('.vr-tab').forEach(t=>t.onclick=()=>{
@@ -1376,14 +1436,34 @@ function renderVRadar(el){
     document.addEventListener('click',function h(e){if(!e.target.closest('#vrAddSearch')&&!e.target.closest('#vrAddResults')){if(addRes)addRes.style.display='none';document.removeEventListener('click',h)}});
     bindViewToggles(buildUI);
     if(vrResults.length)renderResults();
+    // Infinite scroll via IntersectionObserver
+    setupScrollObserver();
   }
 
   let _autoDiscovered=false;
+  let _loadingMore=false;
+  let _noMoreResults=false;
+  let _scrollObserver=null;
 
-  async function discover(){
-    vrLoading=true;
+  function setupScrollObserver(){
+    if(_scrollObserver)_scrollObserver.disconnect();
+    const vrBox=$('#vrBox');
+    if(!vrBox)return;
+    _scrollObserver=new IntersectionObserver(function(entries){
+      if(entries[0].isIntersecting&&!_loadingMore&&!_noMoreResults&&!vrLoading){
+        vrPage+=3;S.vrPage=vrPage;
+        discover(true);
+      }
+    },{root:vrBox,rootMargin:'200px'});
+    const sentinel=$('#vrScrollSentinel');
+    if(sentinel)_scrollObserver.observe(sentinel);
+  }
+
+  async function discover(append){
+    if(!append){vrLoading=true;_noMoreResults=false}
+    else{_loadingMore=true;var lm=$('#vrLoadMore');if(lm)lm.style.display='block'}
     const resEl=$('#vrResults');
-    resEl.innerHTML='<div style="text-align:center;padding:60px;color:var(--tx3);font-size:12px"><div class="vr-spinner"></div>Discovering...</div>';
+    if(!append)resEl.innerHTML='<div style="text-align:center;padding:60px;color:var(--tx3);font-size:12px"><div class="vr-spinner"></div>Discovering...</div>';
 
     const mediaType=vrTab==='movies'?'movie':'tv';
     const existingIds=new Set([
@@ -1455,7 +1535,8 @@ function renderVRadar(el){
     }catch(e){console.error('VRadar fetch error:',e)}
 
     const seen=new Set();
-    vrResults=allResults.filter(r=>{
+    if(append)vrResults.forEach(r=>seen.add(String(r.id)));
+    const newItems=allResults.filter(r=>{
       const id=r.id.toString();
       if(seen.has(id)||existingIds.has(id))return false;
       if(activeEra!=='all'){const yr=parseInt((r.release_date||r.first_air_date||'').slice(0,4));
@@ -1470,28 +1551,22 @@ function renderVRadar(el){
       genres:r.genre_ids||[],media_type:mediaType
     })).sort((a,b)=>b.vote-a.vote).slice(0,24);
 
+    if(append){
+      vrResults=vrResults.concat(newItems);
+      if(!newItems.length)_noMoreResults=true;
+    } else {
+      vrResults=newItems;
+    }
     S.vrResults=vrResults;
-    vrLoading=false;
-    renderResults();
+    vrLoading=false;_loadingMore=false;
+    var lm2=$('#vrLoadMore');if(lm2)lm2.style.display='none';
+    renderResults(append);
   }
 
-  function renderResults(){
-    const resEl=$('#vrResults');
-    if(!vrResults.length){resEl.innerHTML='<div style="text-align:center;padding:60px;color:var(--tx3);font-size:12px">No results found. Try different filters or add more titles to your library.</div>';return}
-    const accent=vrTab==='movies'?'blue':'violet';
-    resEl.innerHTML=`
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:var(--tx3);font-weight:600">
-          ${vrResults.length} Discoveries
-        </div>
-        <button class="btn-outline" id="vrRefresh" style="display:flex;align-items:center;gap:6px;padding:8px 18px">
-          <span style="display:inline-block;transition:transform .3s">↻</span> Fresh Picks
-        </button>
-      </div>
-      <div class="vr-grid ${viewClass()}">${vrResults.map((r,i)=>`
-        <div class="vr-card fade-up" style="animation-delay:${Math.min(i*.04,.6)}s" data-tmdb="${r.id}">
+  function vrCardHTML(r,i,accent){
+    return`<div class="vr-card fade-up" style="animation-delay:${Math.min(i*.04,.6)}s" data-tmdb="${r.id}">
           ${r.poster?`<img src="${TMDB_IMG}w342${r.poster}" alt="${esc(r.title)}" loading="lazy" />`
-            :`<div class="vr-no-poster">🎬</div>`}
+            :`<div class="vr-no-poster">\uD83C\uDFAC</div>`}
           <div class="vr-score" style="background:var(--${accent})">${r.vote.toFixed(1)}</div>
           <div class="vr-over">
             <h4>${esc(r.title)}</h4>
@@ -1505,18 +1580,60 @@ function renderVRadar(el){
           <div class="card-preview">
             <div class="cp-title">${esc(r.title)}</div>
             <div class="cp-meta"><span class="cp-rating">${r.vote.toFixed(1)}/10</span><span>${r.year||''}</span></div>
-            <div class="cp-genres">${(r.genres||[]).map(id=>GENRES[id]).filter(Boolean).join(' · ')}</div>
+            <div class="cp-genres">${(r.genres||[]).map(id=>GENRES[id]).filter(Boolean).join(' \u00b7 ')}</div>
             ${r.overview?`<div class="cp-overview">${esc(r.overview)}</div>`:''}
           </div>
-        </div>`).join('')}
-      </div>`;
+        </div>`;
+  }
 
-    // Refresh button - jump ahead 3 pages for fresh results
-    $('#vrRefresh').onclick=()=>{
-      vrPage+=3;S.vrPage=vrPage;
-      $('#vrRefresh span').style.transform=`rotate(${vrPage*120}deg)`;
-      discover();
-    };
+  function renderResults(append){
+    const resEl=$('#vrResults');
+    if(!vrResults.length){resEl.innerHTML='<div style="text-align:center;padding:60px;color:var(--tx3);font-size:12px">No results found. Try different filters or add more titles to your library.</div>';return}
+    const accent=vrTab==='movies'?'blue':'violet';
+
+    if(append){
+      // Append new cards to existing grid
+      const grid=resEl.querySelector('.vr-grid');
+      const cnt=resEl.querySelector('.vr-count');
+      if(grid){
+        const startIdx=grid.children.length;
+        const newCards=vrResults.slice(startIdx);
+        newCards.forEach((r,i)=>{
+          const div=document.createElement('div');
+          div.innerHTML=vrCardHTML(r,startIdx+i,accent);
+          const card=div.firstElementChild;
+          grid.appendChild(card);
+        });
+        if(cnt)cnt.textContent=vrResults.length;
+      }
+      // Reset load more button
+      const loadBtn=$('#vrLoadBtn');
+      if(loadBtn){loadBtn.innerHTML='<span style="display:inline-block;transition:transform .3s">\u21BB</span> Load More';loadBtn.disabled=false}
+      setupScrollObserver();
+    } else {
+      resEl.innerHTML=`
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:3px;color:var(--tx3);font-weight:600">
+            <span class="vr-count">${vrResults.length}</span> Discoveries
+          </div>
+        </div>
+        <div class="vr-grid ${viewClass()}">${vrResults.map((r,i)=>vrCardHTML(r,i,accent)).join('')}
+        </div>
+        <div id="vrScrollSentinel" style="height:1px"></div>
+        <div style="text-align:center;padding:20px 0 8px">
+          <button class="btn-outline" id="vrLoadBtn" style="display:inline-flex;align-items:center;gap:6px;padding:10px 24px">
+            <span style="display:inline-block;transition:transform .3s">\u21BB</span> Load More
+          </button>
+        </div>`;
+      const loadBtn=$('#vrLoadBtn');
+      if(loadBtn)loadBtn.onclick=()=>{
+        vrPage+=3;S.vrPage=vrPage;
+        loadBtn.querySelector('span').style.transform='rotate('+vrPage*120+'deg)';
+        loadBtn.textContent='Loading...';loadBtn.disabled=true;
+        discover(true);
+      };
+      setupScrollObserver();
+    }
 
     function removeCard(tmdbId){
       const card=document.querySelector(`.vr-card[data-tmdb="${tmdbId}"]`);
@@ -1525,52 +1642,47 @@ function renderVRadar(el){
       vrResults=vrResults.filter(r=>String(r.id)!==String(tmdbId));S.vrResults=vrResults;
     }
 
-    // Add to library via full detail modal
-    $$('.vr-add-btn').forEach(btn=>btn.onclick=async(ev)=>{
-      ev.stopPropagation();
-      const tmdbId=btn.dataset.tmdb;
-      const mediaType=vrTab==='movies'?'movie':'tv';
-      if(S.entries.find(e=>String(e.tmdb_id)===String(tmdbId))){toast('Already in library');return}
-      try{
-        const resp=await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${S.apiKey}&append_to_response=external_ids`);
-        const d=await resp.json();
-        S._vrRemoveId=tmdbId;
-        openAddModal({...d,media_type:mediaType});
-      }catch(e){toast('Failed to load details')}
-    });
-
-    // Add to Watchlist (watch later)
-    $$('.vr-bucket-btn').forEach(btn=>btn.onclick=async(ev)=>{
-      ev.stopPropagation();
-      const tmdbId=btn.dataset.tmdb;
-      const mediaType=vrTab==='movies'?'movie':'tv';
-      if(S.bucket.find(e=>String(e.tmdb_id)===String(tmdbId))){toast('Already in Watchlist');return}
-      if(S.entries.find(e=>String(e.tmdb_id)===String(tmdbId))){toast('Already in library');return}
-      btn.disabled=true;btn.textContent='...';
-      try{
-        const resp=await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${S.apiKey}&append_to_response=external_ids`);
-        const d=await resp.json();
-        const t=d.title||d.name,y=(d.release_date||d.first_air_date||'').slice(0,4);
-        S.bucket.push({
-          id:`bucket_${d.id}_${Date.now()}`,tmdb_id:d.id,media_type:mediaType,
-          title:t,year:y,genres:(d.genres||[]).map(g=>g.name),poster:d.poster_path||'',
-          overview:d.overview||'',tmdbRating:d.vote_average||0,
-          runtime:d.runtime||(d.episode_run_time&&d.episode_run_time[0])||0,
-          seasons:d.number_of_seasons||0,episodes:d.number_of_episodes||0,
-          imdbId:d.external_ids?.imdb_id||'',addedAt:new Date().toISOString()
-        });ps();
-        removeCard(tmdbId);
-        toast(`Added "${t}" to Watchlist`);
-      }catch(e){btn.textContent='Error';btn.disabled=false}
-    });
-
-    // Click card to open explore panel with similar movies
-    $$('.vr-card').forEach(card=>{card.onclick=function(ev){
-      if(ev.target.closest('.vr-add-btn'))return;
+    // Use event delegation on the results container for all card interactions
+    resEl.onclick=async function(ev){
+      const card=ev.target.closest('.vr-card');if(!card)return;
       const tmdbId=card.dataset.tmdb;
+      const mediaType=vrTab==='movies'?'movie':'tv';
+      const addBtn=ev.target.closest('.vr-add-btn');
+      if(addBtn){
+        ev.stopPropagation();
+        if(addBtn.classList.contains('vr-bucket-btn')){
+          // Add to watchlist
+          if(S.bucket.find(e=>String(e.tmdb_id)===String(tmdbId))){toast('Already in Watchlist');return}
+          if(S.entries.find(e=>String(e.tmdb_id)===String(tmdbId))){toast('Already in library');return}
+          addBtn.disabled=true;addBtn.textContent='...';
+          try{
+            const resp=await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${S.apiKey}&append_to_response=external_ids`);
+            const d=await resp.json();
+            const t=d.title||d.name,y=(d.release_date||d.first_air_date||'').slice(0,4);
+            S.bucket.push({
+              id:`bucket_${d.id}_${Date.now()}`,tmdb_id:d.id,media_type:mediaType,
+              title:t,year:y,genres:(d.genres||[]).map(g=>g.name),poster:d.poster_path||'',
+              overview:d.overview||'',tmdbRating:d.vote_average||0,
+              runtime:d.runtime||(d.episode_run_time&&d.episode_run_time[0])||0,
+              seasons:d.number_of_seasons||0,episodes:d.number_of_episodes||0,
+              imdbId:d.external_ids?.imdb_id||'',addedAt:new Date().toISOString()
+            });ps();removeCard(tmdbId);toast(`Added "${t}" to Watchlist`);
+          }catch(e){addBtn.textContent='Error';addBtn.disabled=false}
+        } else {
+          // Add to library
+          if(S.entries.find(e=>String(e.tmdb_id)===String(tmdbId))){toast('Already in library');return}
+          try{
+            const resp=await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${S.apiKey}&append_to_response=external_ids`);
+            const d=await resp.json();S._vrRemoveId=tmdbId;
+            openAddModal({...d,media_type:mediaType});
+          }catch(e){toast('Failed to load details')}
+        }
+        return;
+      }
+      // Click card — open explore panel
       const r=vrResults.find(x=>String(x.id)===String(tmdbId));if(!r)return;
-      openExplorePanel(r,vrTab==='movies'?'movie':'tv',removeCard);
-    }});
+      openExplorePanel(r,mediaType,removeCard);
+    };
   }
 
   buildUI();
@@ -1632,7 +1744,9 @@ function renderBucket(el){
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--tx3)">${rawItems.length} titles</span>${viewToggles()}</div>
       </div>
 
-      <div id="bucketGridWrap"></div>
+      <div class="scroll-box-wrap"><div class="scroll-box" id="bucketScrollBox">
+        <div id="bucketGridWrap"></div>
+      </div></div>
     </div>`;
 
     function renderBucketGrid(){
@@ -1867,7 +1981,9 @@ function renderVRcommend(el){
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px"><span class="rec-count" style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600">${filtered.length}</span>${viewToggles()}</div>
       </div>
 
-      <div id="recGridWrap"></div>
+      <div class="scroll-box-wrap"><div class="scroll-box">
+        <div id="recGridWrap"></div>
+      </div></div>
     </div>`;
 
     function renderRecGrid(){
@@ -1982,7 +2098,9 @@ function renderPicks(el){
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px"><span class="picks-count" style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600">${filtered.length}</span></div>
       </div>
 
-      <div id="picksGridWrap"></div>
+      <div class="scroll-box-wrap"><div class="scroll-box">
+        <div id="picksGridWrap"></div>
+      </div></div>
     </div>`;
 
     function renderPicksGrid(){
