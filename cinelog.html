@@ -23,12 +23,12 @@
   --tx:#1a1a1e;--tx2:#6b6660;--tx3:#9c9890;--brd:rgba(0,0,0,.08);--red:#dc2626;--grn:#16a34a;
   --overlay:rgba(0,0,0,.5);--header-bg:rgba(245,243,240,.85);--card-shadow:rgba(0,0,0,.1);--noise-opacity:0;
 }
-body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;position:relative}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--tx);height:100vh;overflow:hidden;position:relative}
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:var(--noise-opacity)}
 body::after{content:'';position:fixed;top:-40%;left:-20%;width:80%;height:80%;
   background:radial-gradient(ellipse,rgba(14,165,233,.04) 0%,transparent 70%);z-index:0;pointer-events:none}
-#app{position:relative;z-index:1}
+#app{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh;overflow-x:clip;overflow-y:hidden}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--bg5);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--blue-d)}
 ::selection{background:var(--blue);color:#fff}
@@ -39,6 +39,12 @@ a{color:var(--blue);text-decoration:none;transition:color .2s}a:hover{color:var(
 @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
 @keyframes glow{0%,100%{opacity:.5}50%{opacity:1}}
 @keyframes slideIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes spin-border { to { --border-angle: 360deg; } }
 .fade-up{animation:slideIn .5s cubic-bezier(.22,1,.36,1) both}
 
 /* ═══ HEADER ═══ */
@@ -60,10 +66,10 @@ a{color:var(--blue);text-decoration:none;transition:color .2s}a:hover{color:var(
 .nav button.active{color:var(--blue-l)}
 .nav button.active::after{content:'';position:absolute;bottom:-1px;left:20%;right:20%;height:2px;
   background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:1px}
-.main{padding:32px 40px;max-width:1440px;margin:0 auto}
+.main{padding:20px 40px 0;max-width:1440px;margin:0 auto;width:100%;flex:1;min-height:0;display:flex;flex-direction:column;overflow:visible}
 
 /* ═══ SETUP ═══ */
-.setup{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:85vh;text-align:center;animation:fadeUp .8s cubic-bezier(.22,1,.36,1)}
+.setup{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;animation:fadeUp .8s cubic-bezier(.22,1,.36,1)}
 .setup .logo{font-size:64px;margin-bottom:8px;filter:drop-shadow(0 0 40px rgba(14,165,233,.2))}
 .setup .logo-sub{font-size:12px;letter-spacing:6px;margin-bottom:56px}
 .setup-box{background:var(--bg2);border:1px solid var(--brd);border-radius:20px;padding:44px;max-width:480px;width:100%;position:relative;overflow:hidden}
@@ -200,51 +206,51 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .check-label{font-size:12px;color:var(--tx2)}
 
 /* ═══ LIBRARY TABS ═══ */
-.lib-tabs{display:flex;justify-content:center;gap:0;margin-bottom:32px;position:relative}
-.lib-tabs-boxed{background:var(--bg3);border:1px solid var(--brd);border-radius:16px;padding:4px;display:inline-flex;gap:0}
+.lib-tabs{display:flex;justify-content:center;gap:0;margin-bottom:14px;position:relative;flex-shrink:0}
+.lib-tabs-boxed{background:var(--bg3);border:1px solid var(--brd);border-radius:12px;padding:3px;display:inline-flex;gap:0}
 .lib-tabs-boxed .lib-tab{position:relative}
 .lib-tabs-boxed .lib-tab+.lib-tab::before{content:'';position:absolute;left:0;top:20%;height:60%;width:1px;
   background:linear-gradient(180deg,var(--blue-l),var(--violet));opacity:.3;transition:opacity .3s}
 .lib-tabs-boxed .lib-tab.active-movie+.lib-tab::before,.lib-tabs-boxed .lib-tab.active-tv+.lib-tab::before,
 .lib-tabs-boxed .lib-tab.active-movie::before,.lib-tabs-boxed .lib-tab.active-tv::before{opacity:0}
-.lib-tab{padding:14px 36px;border:none;background:transparent;color:var(--tx3);font-family:'Sora',sans-serif;
-  font-size:14px;font-weight:600;cursor:pointer;transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;letter-spacing:.2px;
-  display:flex;align-items:center;gap:9px;border-radius:12px;white-space:nowrap}
+.lib-tab{padding:9px 22px;border:none;background:transparent;color:var(--tx3);font-family:'Sora',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .35s cubic-bezier(.22,1,.36,1);position:relative;letter-spacing:.2px;
+  display:flex;align-items:center;gap:6px;border-radius:10px;white-space:nowrap}
 .lib-tab:hover{color:var(--tx);background:var(--bg4)}
-.lib-tab .tab-icon{font-size:18px}
-.lib-tab .tab-count{font-size:10px;padding:2px 8px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:600;transition:all .3s}
+.lib-tab .tab-icon{font-size:14px}
+.lib-tab .tab-count{font-size:9px;padding:2px 6px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-weight:600;transition:all .3s}
 .lib-tab.active-movie{color:#fff;background:linear-gradient(135deg,var(--blue),var(--blue-d));box-shadow:0 4px 20px rgba(14,165,233,.3)}
 .lib-tab.active-movie .tab-count{background:rgba(255,255,255,.2);color:#fff}
 .lib-tab.active-tv{color:#fff;background:linear-gradient(135deg,var(--violet),var(--violet-d));box-shadow:0 4px 20px rgba(167,139,250,.3)}
 .lib-tab.active-tv .tab-count{background:rgba(255,255,255,.2);color:#fff}
 .lib-tab:not([class*="active-"]) .tab-count{background:var(--bg4);color:var(--tx3)}
 .lib-panel{display:none;animation:slideIn .35s cubic-bezier(.22,1,.36,1) both}
-.lib-panel.active{display:block}
+.lib-panel.active{display:flex;flex-direction:column;flex:1;min-height:0}
 
 /* ═══ HERO BANNER ═══ */
-.hero{position:relative;width:100vw;margin-left:calc(-50vw + 50%);margin-top:-32px;padding:48px 40px 60px;cursor:pointer;animation:fadeUp .6s cubic-bezier(.22,1,.36,1);overflow:hidden}
+.hero{position:relative;width:100vw;margin-left:calc(-50vw + 50%);margin-top:-20px;padding:20px 40px 24px;cursor:pointer;animation:fadeUp .6s cubic-bezier(.22,1,.36,1);overflow:hidden;flex-shrink:0}
 .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center 20%;
   filter:brightness(.15) saturate(1.4) blur(40px);transform:scale(1.1);
   mask-image:linear-gradient(to bottom,black 30%,transparent 100%);
   -webkit-mask-image:linear-gradient(to bottom,black 30%,transparent 100%)}
 .hero-content{position:relative;z-index:1;display:flex;align-items:center;gap:24px;max-width:1360px;margin:0 auto}
-.hero-poster{width:100px;height:150px;border-radius:12px;object-fit:cover;box-shadow:0 8px 40px rgba(0,0,0,.5);flex-shrink:0}
+.hero-poster{width:70px;height:105px;border-radius:10px;object-fit:cover;box-shadow:0 8px 40px rgba(0,0,0,.5);flex-shrink:0}
 .hero-info{flex:1;min-width:0}
-.hero-label{font-size:9px;text-transform:uppercase;letter-spacing:3px;margin-bottom:8px;font-weight:600}
-.hero-title{font-family:'Bodoni Moda',serif;font-size:28px;font-weight:700;line-height:1.15;margin-bottom:6px;
+.hero-label{font-size:9px;text-transform:uppercase;letter-spacing:3px;margin-bottom:4px;font-weight:600}
+.hero-title{font-family:'Bodoni Moda',serif;font-size:22px;font-weight:700;line-height:1.15;margin-bottom:4px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-meta{font-size:11px;color:var(--tx2);margin-bottom:8px;display:flex;gap:12px;align-items:center}
 .hero-rating{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px}
 .hero-tags{display:flex;gap:5px;flex-wrap:wrap}
-.hero-shuffle{position:absolute;bottom:20px;right:40px;width:32px;height:32px;border-radius:50%;
+.hero-shuffle{position:absolute;bottom:12px;right:40px;width:32px;height:32px;border-radius:50%;
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
   color:var(--tx3);font-size:14px;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;z-index:2}
 .hero-shuffle:hover{background:rgba(255,255,255,.15);color:var(--tx);transform:rotate(180deg)}
 
 /* ═══ LIBRARY SECTIONS ═══ */
-.lib-section{margin-bottom:48px;animation:slideIn .5s cubic-bezier(.22,1,.36,1) both}
+.lib-section{margin-bottom:20px;animation:slideIn .5s cubic-bezier(.22,1,.36,1) both;flex-shrink:0}
 .lib-section:nth-child(2){animation-delay:.12s}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;padding-bottom:14px;flex-wrap:wrap;gap:12px;position:relative}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding-bottom:10px;flex-wrap:wrap;gap:12px;position:relative;flex-shrink:0}
 .section-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px}
 .section-header.movie-header::after{background:linear-gradient(90deg,var(--blue),transparent 80%)}
 .section-header.tv-header::after{background:linear-gradient(90deg,var(--violet),transparent 80%)}
@@ -444,7 +450,7 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .type-badge.tv{background:rgba(167,139,250,.7);color:#fff}
 
 /* ═══ STATS ═══ */
-.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
 .stat-card{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:24px;position:relative;overflow:hidden}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,var(--blue),var(--violet),transparent);opacity:.4}
@@ -452,7 +458,7 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .stat-val{font-family:'Bodoni Moda',serif;font-size:36px;font-weight:700;
   background:linear-gradient(90deg,var(--blue-l),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .stat-sub{font-size:11px;color:var(--tx2);margin-top:4px;font-family:'JetBrains Mono',monospace}
-.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 .chart-box{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:24px}
 .chart-title{font-family:'Bodoni Moda',serif;font-size:18px;font-weight:600;margin-bottom:18px;
   background:linear-gradient(90deg,var(--blue-l) 0%,var(--violet) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -466,7 +472,7 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
   display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;border:2px solid var(--bg2)}
 
 /* ═══ PICKS ═══ */
-.picks-section{margin-bottom:44px;animation:slideIn .5s cubic-bezier(.22,1,.36,1) both}
+.picks-section{margin-bottom:20px;animation:slideIn .5s cubic-bezier(.22,1,.36,1) both;flex-shrink:0}
 .picks-genre-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--brd)}
 .picks-genre-title{font-family:'Bodoni Moda',serif;font-size:22px;font-weight:600;
   background:linear-gradient(90deg,var(--blue-l),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -499,7 +505,7 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
   box-shadow:0 12px 40px rgba(14,165,233,.3);letter-spacing:.2px}
 
 /* ═══ FILTER PILLS ═══ */
-.pill-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-bottom:10px;margin-bottom:10px;
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding-bottom:6px;margin-bottom:6px;flex-shrink:0;
   border-bottom:1px solid rgba(14,165,233,.1)}
 .pill-row:last-of-type{border-bottom:none;margin-bottom:8px}
 .pill-row-inline{border-bottom:none;margin-bottom:0;padding-bottom:0}
@@ -528,11 +534,74 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 .data-menu button:hover{background:var(--bg4)}
 .data-menu button span{font-size:16px}
 
-/* ═══ GRADIENT SCROLL BOX ═══ */
-.scroll-box-wrap{height:70vh;border-radius:16px;padding:1.5px;overflow:hidden;
-  background:linear-gradient(135deg,var(--blue),var(--violet))}
-.scroll-box{height:100%;overflow-y:hidden;border-radius:14.5px;padding:20px;background:var(--bg2)}
-.scroll-box.scroll-active{overflow-y:scroll}
+/* ═══ VIEWPORT FIT ═══ */
+.main>.fade-up:only-child{display:flex;flex-direction:column;flex:1;min-height:0}
+.stats-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden}
+
+/* ═══ TV SCREEN FRAME ═══ */
+.tv-glow{flex:1;min-height:0;border-radius:16px;padding:8px;position:relative;overflow:visible;
+  background:conic-gradient(from var(--border-angle), #0ea5e9, #38bdf8, #a78bfa, #c4b5fd, #06b6d4, #0ea5e9);
+  animation:spin-border 5s linear infinite;margin-bottom:40px;
+  box-shadow:0 0 12px rgba(14,165,233,.35),0 0 24px rgba(167,139,250,.2)}
+.scroll-box-wrap{height:100%;border-radius:10px;overflow:visible;position:relative;
+  background:none;box-shadow:none}
+/* TV stand — ~30% of TV width for realistic proportion */
+.tv-glow::before{content:'';position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  width:30%;height:10px;background:linear-gradient(180deg,#3a3a44,#2e2e38);
+  border-radius:0 0 6px 6px;box-shadow:0 4px 12px rgba(0,0,0,.35),0 2px 10px rgba(14,165,233,.12)}
+/* Power button — real element for click interaction */
+.tv-power-btn{position:absolute;bottom:1px;left:50%;transform:translateX(-50%);z-index:3;
+  width:6px;height:6px;border-radius:50%;border:none;padding:0;cursor:pointer;
+  background:radial-gradient(circle at 40% 35%,#ff6b6b,#ef4444 50%,#b91c1c);
+  box-shadow:0 0 6px rgba(239,68,68,.5),0 0 2px rgba(239,68,68,.8);
+  transition:background .3s,box-shadow .3s}
+.tv-power-btn:hover{box-shadow:0 0 10px rgba(239,68,68,.7),0 0 4px rgba(239,68,68,.9);transform:translateX(-50%) scale(1.3)}
+.tv-glow.tv-off .tv-power-btn{background:radial-gradient(circle at 40% 35%,#666,#444 50%,#333);
+  box-shadow:0 0 4px rgba(100,100,100,.3)}
+/* TV off state */
+.tv-glow.tv-off{animation:none;background:#1a1a22;
+  box-shadow:0 0 4px rgba(0,0,0,.3)}
+.tv-glow.tv-off .scroll-box{pointer-events:none}
+/* CRT shutdown overlay — black backdrop + bright scanline via pseudo-element */
+.tv-crt-overlay{position:absolute;inset:0;border-radius:10px;z-index:2;pointer-events:none;
+  background:#0a0a0e;opacity:0;transition:none;overflow:hidden}
+.tv-crt-overlay::after{content:'';position:absolute;left:0;right:0;top:50%;
+  height:0;background:#fff;transform:translateY(-50%);opacity:0;
+  box-shadow:0 0 20px 6px rgba(14,165,233,.6),0 0 40px 10px rgba(14,165,233,.3)}
+/* Shutdown: content gradually dims, collapses into line, line shrinks to dot */
+@keyframes tv-shutdown-bg{
+  0%{opacity:0} 35%{opacity:.9} 50%{opacity:1} 100%{opacity:1}
+}
+@keyframes tv-shutdown-line{
+  0%{height:100%;opacity:0;left:0;right:0}
+  30%{height:100%;opacity:0;left:0;right:0}
+  38%{height:60%;opacity:.2;left:0;right:0}
+  48%{height:20%;opacity:.5;left:0;right:0}
+  58%{height:3px;opacity:.8;left:0;right:0}
+  78%{height:2px;opacity:.7;left:30%;right:30%}
+  92%{height:2px;opacity:.5;left:48%;right:48%}
+  100%{height:0;opacity:0;left:50%;right:50%}
+}
+/* Boot: bright line appears at center, expands, then overlay fades revealing content */
+@keyframes tv-bootup-bg{
+  0%{opacity:1} 85%{opacity:1} 100%{opacity:0}
+}
+@keyframes tv-bootup-line{
+  0%{height:0;opacity:0;left:50%;right:50%}
+  10%{height:2px;opacity:.8;left:48%;right:48%}
+  30%{height:2px;opacity:1;left:30%;right:30%}
+  50%{height:3px;opacity:1;left:0;right:0}
+  80%{height:100%;opacity:0;left:0;right:0}
+  100%{height:100%;opacity:0}
+}
+.tv-crt-overlay.shutting-down{animation:tv-shutdown-bg 1.4s ease-in forwards}
+.tv-crt-overlay.shutting-down::after{animation:tv-shutdown-line 1.4s ease-in forwards}
+.tv-crt-overlay.booting-up{animation:tv-bootup-bg .6s ease-out forwards}
+.tv-crt-overlay.booting-up::after{animation:tv-bootup-line .6s ease-out forwards}
+.tv-glow.tv-off .tv-crt-overlay{opacity:1;background:#0a0a0e;border-radius:inherit}
+/* Screen */
+.scroll-box{height:100%;overflow-y:auto;border-radius:8px;padding:20px;background:var(--bg2);
+  box-shadow:inset 0 0 30px rgba(0,0,0,.15),inset 0 1px 0 rgba(14,165,233,.04)}
 .scroll-box::-webkit-scrollbar{width:4px}
 .scroll-box::-webkit-scrollbar-track{background:transparent}
 .scroll-box::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--blue),var(--violet));border-radius:2px}
@@ -556,20 +625,22 @@ select:hover{border-color:var(--tx3)}select:focus{border-color:var(--blue);box-s
 [data-theme="light"] ::-webkit-scrollbar-track{background:var(--bg3)}
 [data-theme="light"] ::-webkit-scrollbar-thumb{background:var(--bg5)}
 [data-theme="light"] ::selection{background:var(--blue);color:#fff}
+[data-theme="light"] .tv-glow::before{background:linear-gradient(180deg,#ccc8c2,#c0bcb6)}
+[data-theme="light"] .scroll-box{box-shadow:inset 0 0 20px rgba(0,0,0,.04),inset 0 1px 0 rgba(14,165,233,.03)}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){.stat-grid{grid-template-columns:1fr 1fr}.charts-grid{grid-template-columns:1fr}
-  .header{padding:0 18px;height:56px}.main{padding:20px 18px}
+  .header{padding:0 18px;height:56px}.main{padding:14px 18px 0}
   .poster-grid,.vr-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px}
   .section-title{font-size:22px}.mood-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
-  .lib-tab{font-size:12px;padding:10px 20px}.hero{width:100vw;margin-left:calc(-50vw + 50%);margin-top:-20px;padding:28px 18px 48px}
-  .hero-title{font-size:22px}.hero-poster{width:80px;height:120px}.hero-shuffle{right:18px}
+  .lib-tab{font-size:11px;padding:8px 16px}.hero{width:100vw;margin-left:calc(-50vw + 50%);margin-top:-20px;padding:16px 18px 20px}
+  .hero-title{font-size:22px}.hero-poster{width:60px;height:90px}.hero-shuffle{right:18px}
   .bucket-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.stat-grid{grid-template-columns:1fr 1fr}.modal{width:96%;border-radius:16px}
   .modal-head{flex-direction:column;align-items:center;text-align:center}
   .nav button{padding:6px 10px;font-size:9px}.setup .logo{font-size:42px}
-  .hero-content{padding:16px 20px}.hero-title{font-size:18px}.lib-tab{font-size:11px;padding:8px 14px;gap:5px}
-  .lib-tab .tab-icon{font-size:14px}.lib-tab .tab-count{font-size:9px;padding:2px 6px}}
+  .hero-content{padding:16px 20px}.hero-title{font-size:18px}.lib-tab{font-size:10px;padding:6px 12px;gap:4px}
+  .lib-tab .tab-icon{font-size:12px}.lib-tab .tab-count{font-size:9px;padding:2px 6px}}
 </style>
 </head>
 <body>
@@ -1012,29 +1083,29 @@ function renderLibrary(el){
     <div class="lib-panel movie-section ${activePanel==='movies'?'active':''}" id="moviesPanel">
       ${pillRow('Genre',buildGenrePills(),mGenre,'mg','blue')}
       ${buildTagPills(movies).length>1?pillRow('Tags',buildTagPills(movies),mTag,'mt','blue'):''}
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0">
         <div style="position:relative;flex:1;min-width:180px"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:13px;pointer-events:none">🔍</span><input type="text" id="mSr" placeholder="Search movies..." style="width:100%;padding:8px 14px 8px 32px;font-size:11px;background:var(--bg3);border-radius:10px" /></div>
         ${pillRow('Sort',[{id:'rating',label:'Rating'},{id:'title',label:'Title'},{id:'year',label:'Year'},{id:'tmdb',label:'TMDB'}],mSort,'ms','blue',true)}
         <div style="margin-left:auto">${viewToggles()}</div>
       </div>
-      <div class="scroll-box-wrap"><div class="scroll-box">
+      <div class="tv-glow"><div class="scroll-box-wrap"><div class="scroll-box">
         <div class="poster-grid ${viewClass()}" id="mGrid"></div>
         ${!movies.length?'<div style="text-align:center;padding:50px;color:var(--tx3);font-size:12px">No movies yet. Head to <strong>Discover</strong> to search and add some.</div>':''}
-      </div></div>
+      </div></div></div>
     </div>
 
     <div class="lib-panel tv-section ${activePanel==='tv'?'active':''}" id="tvPanel">
       ${pillRow('Genre',buildGenrePills(),tGenre,'tg','violet')}
       ${buildTagPills(tvShows).length>1?pillRow('Tags',buildTagPills(tvShows),tTag,'tt','violet'):''}
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0">
         <div style="position:relative;flex:1;min-width:180px"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:13px;pointer-events:none">🔍</span><input type="text" id="tSr" placeholder="Search TV shows..." style="width:100%;padding:8px 14px 8px 32px;font-size:11px;background:var(--bg3);border-radius:10px" /></div>
         ${pillRow('Sort',[{id:'rating',label:'Rating'},{id:'title',label:'Title'},{id:'year',label:'Year'},{id:'tmdb',label:'TMDB'}],tSort,'ts','violet',true)}
         <div style="margin-left:auto">${viewToggles()}</div>
       </div>
-      <div class="scroll-box-wrap"><div class="scroll-box">
+      <div class="tv-glow"><div class="scroll-box-wrap"><div class="scroll-box">
         <div class="poster-grid ${viewClass()}" id="tGrid"></div>
         ${!tvShows.length?'<div style="text-align:center;padding:50px;color:var(--tx3);font-size:12px">No TV shows yet. Head to <strong>Discover</strong> to search and add some.</div>':''}
-      </div></div>
+      </div></div></div>
     </div>`;
 
   // Hero click & shuffle
@@ -1329,12 +1400,12 @@ function renderVRadar(el){
   function buildUI(){
     el.innerHTML=`
     <div class="fade-up">
-      <div style="margin-bottom:28px">
+      <div style="margin-bottom:14px;flex-shrink:0">
         <h2 class="grad-title" style="font-size:36px">Discover</h2>
         <p style="color:var(--tx2);font-size:12px;margin-top:4px">Discover your next watch based on your taste profile</p>
       </div>
 
-      <div class="lib-tabs" style="margin-bottom:24px">
+      <div class="lib-tabs" style="margin-bottom:12px;flex-shrink:0">
         <div class="lib-tabs-boxed">
           <button class="lib-tab vr-tab ${vrTab==='movies'?'active-movie':''}" data-vr="movies">
             <span class="tab-icon">🎬</span>Movies
@@ -1349,7 +1420,7 @@ function renderVRadar(el){
       ${pillRow('Mood',[{id:'none',label:'All'},...moods.map(m=>({id:m.id,label:m.label,icon:m.icon}))],activeMood||'none','vmood',vrTab==='movies'?'blue':'violet')}
       ${pillRow('Era',eras,activeEra,'vera',vrTab==='movies'?'blue':'violet')}
 
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0">
         <div style="position:relative;flex:2;min-width:200px">
           <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:13px;pointer-events:none">&#x2315;</span>
           <input type="text" id="vrSearch" placeholder="Keywords (korean, heist...)" value="${esc(S.vrSearch||'')}"
@@ -1367,12 +1438,12 @@ function renderVRadar(el){
         ${viewToggles()}
       </div>
 
-      <div class="scroll-box-wrap">
+      <div class="tv-glow"><div class="scroll-box-wrap">
         <div class="scroll-box" id="vrBox">
           <div id="vrResults">${vrLoading?'<div style="text-align:center;padding:60px;color:var(--tx3);font-size:12px"><div class="vr-spinner"></div>Discovering...</div>':''}</div>
           <div id="vrLoadMore" style="display:none;text-align:center;padding:20px;color:var(--tx3);font-size:11px"><div class="vr-spinner"></div>Loading more...</div>
         </div>
-      </div>
+      </div></div>
     </div>`;
 
     $$('.vr-tab').forEach(t=>t.onclick=()=>{
@@ -1711,14 +1782,14 @@ function renderBucket(el){
     const accent=isRewatch?'blue':(bTab==='movies'?'blue':'violet');
     el.innerHTML=`
     <div class="fade-up">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:24px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:12px;flex-shrink:0">
         <div>
           <h2 class="grad-title" style="font-size:32px">Watchlist</h2>
           <p style="color:var(--tx2);font-size:12px;margin-top:4px">${S.bucket.length} title${S.bucket.length!==1?'s':''} to watch${rewatchItems.length?' · '+rewatchItems.length+' to rewatch':''}</p>
         </div>
       </div>
 
-      <div class="lib-tabs" style="margin-bottom:24px">
+      <div class="lib-tabs" style="margin-bottom:12px;flex-shrink:0">
         <div class="lib-tabs-boxed">
           <button class="lib-tab b-tab ${bTab==='movies'?'active-movie':''}" data-bt="movies">
             <span class="tab-icon">\uD83C\uDFAC</span>Movies<span class="tab-count">${bucketMovies.length}</span>
@@ -1734,16 +1805,16 @@ function renderBucket(el){
 
       ${isRewatch?'':`${pillRow('Genre',[{id:'all',label:'All'},...MAJOR_GENRES.map(g=>({id:g,label:g}))],bGenre,'bgenre',accent)}
       ${pillRow('Mood',bucketMoods.map(m=>({id:m.id,label:m.label,icon:m.icon})),bMood,'bmood',accent)}`}
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0">
         <div style="position:relative;flex:1;min-width:140px"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:13px;pointer-events:none">🔍</span><input type="text" id="bFilter" placeholder="Search ${isRewatch?'rewatch list':'collection'}..." autocomplete="off" value="${esc(bSearch)}" style="width:100%;padding:8px 14px 8px 32px;font-size:11px;background:var(--bg3);border-radius:10px" /></div>
         ${isRewatch?'':`<div style="position:relative;flex:1;min-width:140px"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--${accent});font-size:13px;pointer-events:none">＋</span><input type="text" id="bAdd" placeholder="Add to watchlist..." autocomplete="off" style="width:100%;padding:8px 14px 8px 32px;font-size:11px;background:var(--bg3);border-radius:10px;border-color:var(--${accent})" /><div id="bsr" class="results" style="display:none"></div></div>`}
         ${isRewatch?'':pillRow('Rating',[{id:'0',label:'Any'},{id:'6',label:'6+'},{id:'7',label:'7+'},{id:'8',label:'8+'},{id:'9',label:'9+'}],String(bMinRating),'brating',accent,true)}
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--tx3)">${rawItems.length} titles</span>${viewToggles()}</div>
       </div>
 
-      <div class="scroll-box-wrap"><div class="scroll-box" id="bucketScrollBox">
+      <div class="tv-glow"><div class="scroll-box-wrap"><div class="scroll-box" id="bucketScrollBox">
         <div id="bucketGridWrap"></div>
-      </div></div>
+      </div></div></div>
     </div>`;
 
     function renderBucketGrid(){
@@ -1953,12 +2024,12 @@ function renderVRcommend(el){
     const accent=recTab==='movies'?'blue':'violet';
     el.innerHTML=`
     <div class="fade-up">
-      <div style="margin-bottom:28px">
+      <div style="margin-bottom:14px;flex-shrink:0">
         <h2 class="grad-title" style="font-size:36px">Recommend</h2>
         <p style="color:var(--tx2);font-size:12px;margin-top:4px">Your curated picks — share what you'd recommend to friends</p>
       </div>
 
-      <div class="lib-tabs" style="margin-bottom:24px">
+      <div class="lib-tabs" style="margin-bottom:12px;flex-shrink:0">
         <div class="lib-tabs-boxed">
           <button class="lib-tab rec-tab ${recTab==='movies'?'active-movie':''}" data-rec="movies">
             <span class="tab-icon">🎬</span>Movies<span class="tab-count">${movies.length}</span>
@@ -1972,15 +2043,15 @@ function renderVRcommend(el){
       ${pillRow('Genre',[{id:'all',label:'All'},...MAJOR_GENRES.map(g=>({id:g,label:g}))],recGenre,'rgenre',accent)}
       ${pillRow('Mood',moodFilters.map(m=>({id:m.id,label:m.label})),recMood,'rmood',accent)}
       ${allTags.length?pillRow('Tags',[{id:'all',label:'All'},...allTags.sort().slice(0,8).map(t=>({id:t,label:t}))],recTag,'rtag',accent):''}
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0">
         <div style="position:relative;flex:1;min-width:180px"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:13px;pointer-events:none">🔍</span><input type="text" id="recSearch" placeholder="Search recommendations..." value="${esc(recSearch)}" style="width:100%;padding:8px 14px 8px 32px;font-size:11px;background:var(--bg3);border-radius:10px" /></div>
         ${pillRow('Rating',[{id:'5',label:'5+'},{id:'6',label:'6+'},{id:'7',label:'7+'},{id:'8',label:'8+'},{id:'9',label:'9+'}],String(recMinRating),'rrating',accent,true)}
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px"><span class="rec-count" style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600">${filtered.length}</span>${viewToggles()}</div>
       </div>
 
-      <div class="scroll-box-wrap"><div class="scroll-box">
+      <div class="tv-glow"><div class="scroll-box-wrap"><div class="scroll-box">
         <div id="recGridWrap"></div>
-      </div></div>
+      </div></div></div>
     </div>`;
 
     function renderRecGrid(){
@@ -2066,7 +2137,7 @@ function renderPicks(el){
     const accent=pTab==='movies'?'blue':'violet';
     el.innerHTML=`
     <div class="fade-up">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:24px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;margin-bottom:12px;flex-shrink:0">
         <div><h2 class="grad-title" style="font-size:32px">Favourites</h2>
           <p style="color:var(--tx2);font-size:12px;margin-top:4px">${recs.length} favourite${recs.length!==1?'s':''} — ${movies.length} films · ${tvShows.length} shows</p></div>
         <div style="display:flex;gap:8px;align-items:center">
@@ -2075,7 +2146,7 @@ function renderPicks(el){
         </div>
       </div>
 
-      <div class="lib-tabs" style="margin-bottom:24px">
+      <div class="lib-tabs" style="margin-bottom:12px;flex-shrink:0">
         <div class="lib-tabs-boxed">
           <button class="lib-tab p-tab ${pTab==='movies'?'active-movie':''}" data-pt="movies">
             <span class="tab-icon">\uD83C\uDFAC</span>Movies<span class="tab-count">${movies.length}</span>
@@ -2089,14 +2160,14 @@ function renderPicks(el){
       ${pillRow('Genre',[{id:'all',label:'All'},...MAJOR_GENRES.map(g=>({id:g,label:g}))],pGenre,'pgenre',accent)}
       ${pillRow('Mood',pickMoods.map(m=>({id:m.id,label:m.label})),pMood,'pmood',accent)}
       ${allTags.length?pillRow('Tags',[{id:'all',label:'All'},...allTags.slice(0,10).map(t=>({id:t,label:t}))],pTag,'ptag',accent):''}
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0">
         <div style="position:relative;flex:1;min-width:180px"><span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:13px;pointer-events:none">🔍</span><input type="text" id="pSearch" placeholder="Search favourites..." value="${esc(pSearch)}" style="width:100%;padding:8px 14px 8px 32px;font-size:11px;background:var(--bg3);border-radius:10px" /></div>
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px"><span class="picks-count" style="font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--tx3);font-weight:600">${filtered.length}</span></div>
       </div>
 
-      <div class="scroll-box-wrap"><div class="scroll-box">
+      <div class="tv-glow"><div class="scroll-box-wrap"><div class="scroll-box">
         <div id="picksGridWrap"></div>
-      </div></div>
+      </div></div></div>
     </div>`;
 
     function renderPicksGrid(){
@@ -2224,7 +2295,7 @@ function renderStats(el){
   const dd=Object.entries(dc).sort((a,b)=>a[0].localeCompare(b[0]));
   const sc=E.filter(e=>e.tmdbRating>0).map(e=>({x:e.tmdbRating,y:e.myRating,t:e.title}));
 
-  el.innerHTML=`<h2 class="fade-up grad-title" style="font-size:32px;margin-bottom:24px">Your Cinema Stats</h2>
+  el.innerHTML=`<div class="stats-scroll"><h2 class="fade-up grad-title" style="font-size:32px;margin-bottom:24px">Your Cinema Stats</h2>
     <div class="stat-grid">
       <div class="stat-card fade-up"><div class="stat-label">Total Watched</div><div class="stat-val">${E.length}</div><div class="stat-sub">${M.length} films \u00b7 ${T.length} shows</div></div>
       <div class="stat-card fade-up" style="animation-delay:.06s;position:relative"><div class="stat-label">Watch Time</div><div class="stat-val" id="statTimeVal">${statUnit==='hours'?hrs:days}</div><div class="stat-sub" id="statUnitLabel">${statUnit==='hours'?'hours':'days'}</div><button id="statUnitToggle" title="Switch units" style="position:absolute;bottom:12px;right:12px;background:none;border:none;color:var(--tx3);font-size:14px;cursor:pointer;transition:.2s;opacity:.6">⇄</button></div>
@@ -2250,7 +2321,8 @@ function renderStats(el){
           ${e.poster?`<img src="${TMDB_IMG}w185${e.poster}" />`:`<div style="width:115px;height:172px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px">\uD83D\uDCFA</div>`}
           <span class="rank" style="background:${i<3?'linear-gradient(135deg,var(--violet),var(--violet-d))':'var(--bg5)'};color:${i<3?'#fff':'var(--tx2)'}">#${i+1}</span>
           <div style="font-size:10px;margin-top:6px;font-weight:500;line-height:1.2">${esc(e.title)}</div>
-          <div style="font-size:11px;font-weight:700;margin-top:3px;font-family:'JetBrains Mono',monospace;background:linear-gradient(90deg,var(--blue-l),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent">${e.myRating}/10</div></div>`).join('')}</div></div>`:''}`;
+          <div style="font-size:11px;font-weight:700;margin-top:3px;font-family:'JetBrains Mono',monospace;background:linear-gradient(90deg,var(--blue-l),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent">${e.myRating}/10</div></div>`).join('')}</div></div>`:''}
+    </div>`;
 
   Chart.defaults.color='#5c5954';Chart.defaults.borderColor='#1e1e26';Chart.defaults.font.family='Sora';
   S.ci.g=new Chart($('#c1'),{type:'doughnut',data:{labels:gd.map(g=>g[0]),datasets:[{data:gd.map(g=>g[1]),backgroundColor:GP.slice(0,gd.length),borderWidth:0,hoverOffset:8}]},
@@ -2341,6 +2413,49 @@ render();checkBackupReminder();
   var mo=new MutationObserver(scan);
   mo.observe(document.body,{childList:true,subtree:true});
   scan();
+})();
+
+// TV Power Button — inject into each .tv-glow
+(function(){
+  var pwrSet=new Set();
+  function injectPower(){
+    document.querySelectorAll('.tv-glow').forEach(function(tv){
+      if(pwrSet.has(tv))return;pwrSet.add(tv);
+      // Add CRT overlay
+      var overlay=document.createElement('div');
+      overlay.className='tv-crt-overlay';
+      tv.querySelector('.scroll-box-wrap').appendChild(overlay);
+      // Add power button
+      var btn=document.createElement('button');
+      btn.className='tv-power-btn';
+      btn.title='Power';
+      tv.appendChild(btn);
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var isOff=tv.classList.contains('tv-off');
+        if(isOff){
+          // Boot up — remove tv-off, start boot animation (overlay stays opaque via animation)
+          tv.classList.remove('tv-off');
+          overlay.className='tv-crt-overlay booting-up';
+          overlay.addEventListener('animationend',function(){
+            overlay.className='tv-crt-overlay';
+          },{once:true});
+        }else{
+          // Shutdown
+          overlay.className='tv-crt-overlay shutting-down';
+          overlay.addEventListener('animationend',function(){
+            tv.classList.add('tv-off');
+            overlay.className='tv-crt-overlay';
+          },{once:true});
+        }
+      });
+    });
+    // Clean up removed
+    pwrSet.forEach(function(tv){if(!document.contains(tv))pwrSet.delete(tv)});
+  }
+  var pmo=new MutationObserver(injectPower);
+  pmo.observe(document.body,{childList:true,subtree:true});
+  injectPower();
 })();
 </script>
 </body>
